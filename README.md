@@ -30,7 +30,7 @@ A mobile-friendly React app designed to help learners practice typing **Hangul (
 ## 🧪 Local Setup
 
 ```bash
-git clone https://github.com/yourusername/hangul-typing-trainer.git
+git clone https://github.com/tomhubert50400/hangul-typing-practice
 cd hangul-typing-trainer
 npm install
 npm run dev
