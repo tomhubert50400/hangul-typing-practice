@@ -8,7 +8,7 @@ A mobile-friendly React app designed to help learners practice typing **Hangul (
 
 - ✅ Practice typing Korean with real-time feedback
 - 🇰🇷 Input is matched and displayed as properly **composed Hangul syllables**
-- 💬 10 test words and 10 phrases included for now (expandable later)
+- 💬 More than 400 words and phrases available for now !
 - 🎹 Virtual keyboard with accurate **2-set Korean layout (두벌식)**
 - 🌍 Latin labels switch between **AZERTY** and **QWERTY**
 - 🎯 Key highlighting on input (correct = green, wrong = red)
@@ -16,9 +16,9 @@ A mobile-friendly React app designed to help learners practice typing **Hangul (
 
 ## 🔧 Tech Stack
 
-- **React** (Vite or CRA)
-- **Tailwind CSS** (or any styling framework)
-- **Hangul composition logic** (via `hangul-js` or custom logic)
+- **React** (Vite)
+- **CSS**
+- **Hangul composition logic** (`hangul-js`)
 - **Context + Hooks** for layout and input state
 
 ---
