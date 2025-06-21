@@ -1,12 +1,36 @@
-# React + Vite
+# Hangul Typing Trainer 🧠
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-friendly React app designed to help learners practice typing **Hangul (Korean)** using both **physical** and **virtual keyboards**, with real-time feedback and support for **AZERTY** and **QWERTY** layouts.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- ✅ Practice typing Korean with real-time feedback
+- 🇰🇷 Input is matched and displayed as properly **composed Hangul syllables**
+- 💬 10 test words and 10 phrases included for now (expandable later)
+- 🎹 Virtual keyboard with accurate **2-set Korean layout (두벌식)**
+- 🌍 Latin labels switch between **AZERTY** and **QWERTY**
+- 🎯 Key highlighting on input (correct = green, wrong = red)
+- 📱 Responsive mobile design
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🔧 Tech Stack
+
+- **React** (Vite or CRA)
+- **Tailwind CSS** (or any styling framework)
+- **Hangul composition logic** (via `hangul-js` or custom logic)
+- **Context + Hooks** for layout and input state
+
+---
+
+🌍 Visit : https://hangul.zerqua.com/
+
+---
+
+## 🧪 Local Setup
+
+```bash
+git clone https://github.com/yourusername/hangul-typing-trainer.git
+cd hangul-typing-trainer
+npm install
+npm run dev
