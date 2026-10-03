@@ -11,6 +11,8 @@ Rollup update with a clean `npm ci --ignore-scripts`, `npm run build`, and
 `npm audit`. This pin should be reevaluated when the build regression is resolved
 or a new advisory requires it. No major Vite migration is included here.
 
-The refreshed clean install builds successfully and reports zero npm audit
-findings as of the refresh. Existing lint errors and hook warnings are separate
-source-code cleanup; a successful build does not imply lint or visual QA passed.
+The refreshed installation builds successfully and reports zero npm audit findings
+as of the refresh. `npm run lint` and `npm test` also pass. Tests cover composition,
+physical/virtual keyboards, game-length settings, repeated input, resets, timer
+updates, word advancement and mode switching. These DOM checks do not replace a
+full browser/visual review.

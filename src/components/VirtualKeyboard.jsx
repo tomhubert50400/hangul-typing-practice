@@ -1,13 +1,11 @@
 import "./VirtualKeyboard.css";
 import {
   getKeyboardLayout,
-  getLatinLabels,
   getHangulChars,
 } from "../utils/hangulComposer";
 
 function VirtualKeyboard({ layout, onKeyPress, pressedKey }) {
   const keyboardLayout = getKeyboardLayout(layout);
-  const latinLabels = getLatinLabels(layout);
 
   const handleKeyClick = (latinChar, shift = false) => {
     const physicalKey = getPhysicalKey(keyboardLayout, latinChar);

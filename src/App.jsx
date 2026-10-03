@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 import TypingArea from "./components/TypingArea";
@@ -56,8 +56,36 @@ function App() {
   const allItems = mode === "training" ? trainingWords : gameWords;
   const currentItem = allItems[currentWordIndex] || {};
 
+  // Clearing input is independent of mode and game state. Keeping it stable
+  // prevents the mode-switch effect from restarting a game when status changes.
+  const clearCurrentWord = useCallback(() => {
+    setUserInput("");
+    setFeedback([]);
+    setJamos([]);
+    setWordStartTime(null);
+    setElapsedTime(0);
+  }, []);
+
+  const resetCurrentWord = useCallback((isManual = true) => {
+    clearCurrentWord();
+    if (mode === "rank" && isManual && gameStatus === "in-progress") {
+      setResetCount((prev) => prev + 1);
+    }
+  }, [clearCurrentWord, mode, gameStatus]);
+
+  const startGame = useCallback(() => {
+    setGameStatus("in-progress");
+    setCurrentWordIndex(0);
+    setBackspaceCount(0);
+    setResetCount(0);
+    setWordTimes([]);
+    const shuffledWords = shuffleArray([...koreanWords, ...koreanPhrases]);
+    setGameWords(shuffledWords.slice(0, gameLength));
+    clearCurrentWord();
+  }, [clearCurrentWord, gameLength]);
+
   useEffect(() => {
-    resetCurrentWord(false);
+    clearCurrentWord();
     setCurrentWordIndex(0);
 
     if (mode === "training") {
@@ -66,7 +94,7 @@ function App() {
       setGameWords([]);
       setGameStatus("not-started");
     }
-  }, [mode]);
+  }, [mode, clearCurrentWord]);
 
   useEffect(() => {
     let interval;
@@ -78,7 +106,7 @@ function App() {
     return () => clearInterval(interval);
   }, [wordStartTime, gameStatus]);
 
-  const handleKeyPress = (jamo, shift = false) => {
+  const handleKeyPress = useCallback((jamo) => {
     if (mode === "rank" && gameStatus !== "in-progress") return;
 
     if (userInput.length === 0 && jamo !== " ") {
@@ -112,27 +140,19 @@ function App() {
           setGameStatus("finished");
         } else {
           setCurrentWordIndex((prev) => prev + 1);
-          resetCurrentWord(false);
+          clearCurrentWord();
         }
       } else {
         setTimeout(() => {
           setCurrentWordIndex((prev) => (prev + 1) % allItems.length);
-          resetCurrentWord(false);
+          clearCurrentWord();
         }, 500);
       }
     }
-  };
-
-  const resetCurrentWord = (isManual = true) => {
-    setUserInput("");
-    setFeedback([]);
-    setJamos([]);
-    if (mode === "rank" && isManual && gameStatus === "in-progress") {
-      setResetCount((prev) => prev + 1);
-    }
-    setWordStartTime(null);
-    setElapsedTime(0);
-  };
+  }, [
+    mode, gameStatus, userInput.length, jamos, currentItem.hangul,
+    wordStartTime, currentWordIndex, gameLength, allItems.length, clearCurrentWord,
+  ]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -167,7 +187,7 @@ function App() {
         const shift = event.shiftKey;
         const jamo = latinToJamo(event.key, keyboardLayout, shift);
         if (jamo) {
-          handleKeyPress(jamo, shift);
+          handleKeyPress(jamo);
         }
       } else if (event.key === "Enter") {
         event.preventDefault();
@@ -181,18 +201,10 @@ function App() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [jamos, currentItem, keyboardLayout, mode, gameStatus]);
-
-  const startGame = () => {
-    setGameStatus("in-progress");
-    setCurrentWordIndex(0);
-    setBackspaceCount(0);
-    setResetCount(0);
-    setWordTimes([]);
-    const shuffledWords = shuffleArray([...koreanWords, ...koreanPhrases]);
-    setGameWords(shuffledWords.slice(0, gameLength));
-    resetCurrentWord(false);
-  };
+  }, [
+    jamos, currentItem.hangul, keyboardLayout, mode, gameStatus, userInput.length,
+    handleKeyPress, resetCurrentWord, startGame,
+  ]);
 
   return (
     <div className="app">
