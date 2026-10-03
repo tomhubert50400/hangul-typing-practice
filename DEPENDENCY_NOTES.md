@@ -14,5 +14,6 @@ or a new advisory requires it. No major Vite migration is included here.
 The refreshed installation builds successfully and reports zero npm audit findings
 as of the refresh. `npm run lint` and `npm test` also pass. Tests cover composition,
 physical/virtual keyboards, game-length settings, repeated input, resets, timer
-updates, word advancement and mode switching. These DOM checks do not replace a
+updates, word advancement, mode switching and cancellation of pending training
+advances after resets or leaving training. These DOM checks do not replace a
 full browser/visual review.

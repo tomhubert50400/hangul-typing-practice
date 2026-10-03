@@ -104,6 +104,26 @@ test('keyboard handlers retain current game settings and cleanly reset input', a
     assert.ok(document.querySelector('.word-counter'), document.body.textContent);
     assert.equal(document.querySelector('.word-counter').textContent.trim(), '1 / 25');
     assert.equal(jamos(), '');
+
+    // Leaving training before its delayed word advance must not change rank state.
+    await click('.mode-btn:first-child');
+    await select('.layout-selector select', 'QWERTY');
+    const trainingTarget = document.querySelector('.hangul-text').textContent;
+    for (const jamo of Hangul.disassemble(trainingTarget)) await key(...mapping.get(jamo));
+    await click('.mode-btn:nth-child(2)');
+    await key('Enter');
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 550)));
+    assert.equal(document.querySelector('.word-counter').textContent.trim(), '1 / 25');
+    assert.equal(jamos(), '');
+
+    await click('.mode-btn:first-child');
+    const resetTarget = document.querySelector('.hangul-text').textContent;
+    for (const jamo of Hangul.disassemble(resetTarget)) await key(...mapping.get(jamo));
+    await click('.reset-btn');
+    await click('.reset-btn');
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 550)));
+    assert.equal(document.querySelector('.hangul-text').textContent, resetTarget);
+    assert.equal(jamos(), '');
   } finally {
     if (root) await act(async () => root.unmount());
     Math.random = originalRandom;

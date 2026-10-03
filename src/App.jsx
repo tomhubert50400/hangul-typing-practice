@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import "./App.css";
 import VirtualKeyboard from "./components/VirtualKeyboard";
 import TypingArea from "./components/TypingArea";
@@ -48,6 +48,7 @@ function App() {
   const [wordStartTime, setWordStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [wordTimes, setWordTimes] = useState([]);
+  const trainingAdvanceTimeout = useRef(null);
 
   const [trainingWords, setTrainingWords] = useState(() =>
     shuffleArray([...koreanWords, ...koreanPhrases])
@@ -59,12 +60,16 @@ function App() {
   // Clearing input is independent of mode and game state. Keeping it stable
   // prevents the mode-switch effect from restarting a game when status changes.
   const clearCurrentWord = useCallback(() => {
+    clearTimeout(trainingAdvanceTimeout.current);
+    trainingAdvanceTimeout.current = null;
     setUserInput("");
     setFeedback([]);
     setJamos([]);
     setWordStartTime(null);
     setElapsedTime(0);
   }, []);
+
+  useEffect(() => () => clearTimeout(trainingAdvanceTimeout.current), []);
 
   const resetCurrentWord = useCallback((isManual = true) => {
     clearCurrentWord();
@@ -143,7 +148,9 @@ function App() {
           clearCurrentWord();
         }
       } else {
-        setTimeout(() => {
+        clearTimeout(trainingAdvanceTimeout.current);
+        trainingAdvanceTimeout.current = setTimeout(() => {
+          trainingAdvanceTimeout.current = null;
           setCurrentWordIndex((prev) => (prev + 1) % allItems.length);
           clearCurrentWord();
         }, 500);
